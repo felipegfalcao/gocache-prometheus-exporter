@@ -280,6 +280,7 @@ func handleRequests() {
 func urlOut() {
 	var domain string
 	var interval string
+	var host string
 
 	//tNow := time.Now().Add(-24*time.Hour)
 	//handleRequests()
@@ -290,13 +291,18 @@ func urlOut() {
 
 	flag.StringVar(&token, "token", "", "Ex.: -token <token> | Token GoCache. (Required)")
 	flag.StringVar(&domain, "domain", "", "Ex.: -domain google.com.br | Domain. (Required)")
-	flag.StringVar(&interval, "interval", "1h", "Ex.: -interval 1h Valores permitidos: 1min, 1h, 4h, 12h, 1d")
+	flag.StringVar(&interval, "interval", "1h", "Ex.: -interval 1h | Valores permitidos: 1min, 1h, 4h, 12h, 1d. (Required)")
+	flag.StringVar(&host, "host", "", "Ex.: -host www.seudominio.com.br | Permite filtro por subdomínio. O valor deve ser o subdomínio completo")
 
 	flag.Parse()
 
+	if host != "" {
+		host = fmt.Sprintf("&host=%+v", host)
+	}
+
 	token = fmt.Sprintf("%v", token)
 
-	url = fmt.Sprintf("https://api.gocache.com.br/v1/analytics/%v?graph=custom&interval=%v&from=%v&to=%v", domain, interval, tHour, tUnix)
+	url = fmt.Sprintf("https://api.gocache.com.br/v1/analytics/%v?graph=custom&interval=%v&from=%v&to=%v%v", domain, interval, tHour, tUnix, host)
 
 }
 
@@ -346,4 +352,3 @@ func connector() {
 	//fmt.Println()
 	output = string(body)
 }
-
